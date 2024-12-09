@@ -289,6 +289,33 @@ public class IRPF {
 		}
 		return soma;
 	}
-	
+
+	private static final float[] FAIXAS = {22847.76f, 33919.80f, 45012.60f, 55976.16f};
+    private static final float[] ALIQUOTAS = {0.075f, 0.15f, 0.225f, 0.275f};
+    private static final float[] DEDUCOES = {1713.58f, 4257.57f, 7633.51f, 10432.32f};
+
+    /**
+     * Calcula o imposto devido com base nas faixas de imposto.
+     * @return valor do imposto devido
+     */
+    public float calcularImposto() {
+        float totalTributavel = getTotalRendimentosTributaveis();
+        float deducaoTotal = getDeducao();
+        float baseCalculo = totalTributavel - deducaoTotal;
+
+        if (baseCalculo <= FAIXAS[0]) {
+            return 0;
+        }
+
+        float imposto = 0;
+        for (int i = FAIXAS.length - 1; i >= 0; i--) {
+            if (baseCalculo > FAIXAS[i]) {
+                imposto += (baseCalculo - FAIXAS[i]) * ALIQUOTAS[i];
+                baseCalculo = FAIXAS[i];
+            }
+        }
+
+        return imposto;
+    }
 	
 }
