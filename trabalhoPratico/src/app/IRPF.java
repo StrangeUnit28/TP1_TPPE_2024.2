@@ -139,16 +139,26 @@ public class IRPF {
 	}
 	
 	/**
-	 * Return o valor do total de deduções para o contribuinte
-	 * @return valor total de deducoes
+	 * Retorna o valor do total de deduções para o contribuinte
+	 * @return valor total de deduções
 	 */
 	public float getDeducao() {
-		float total = 0; 
-		for (String d: nomesDependentes) {
+		float total = 0;
+
+		// Deduções por dependentes
+		for (String d : nomesDependentes) {
 			total += 189.59f;
 		}
+
+		// Contribuições previdenciárias
 		total += totalContribuicaoPrevidenciaria;
-		
+
+		// Pensões alimentícias
+		total += totalPensaoAlimenticia;
+
+		// Outras deduções cadastradas
+		total += getTotalOutrasDeducoes();
+
 		return total;
 	}
 
@@ -290,18 +300,26 @@ public class IRPF {
 		return soma;
 	}
 
-	private static final float[] FAIXAS = {22847.76f, 33919.80f, 45012.60f, 55976.16f};
+    private static final float[] FAIXAS = {22847.76f, 33919.80f, 45012.60f, 55976.16f};
     private static final float[] ALIQUOTAS = {0.075f, 0.15f, 0.225f, 0.275f};
     private static final float[] DEDUCOES = {1713.58f, 4257.57f, 7633.51f, 10432.32f};
+
+    /**
+     * Calcula a base de cálculo do imposto de renda.
+     * @return base de cálculo do imposto de renda
+     */
+    public float calcularBaseCalculo() {
+        float totalTributavel = getTotalRendimentosTributaveis();
+        float deducaoTotal = getDeducao();
+        return totalTributavel - deducaoTotal;
+    }
 
     /**
      * Calcula o imposto devido com base nas faixas de imposto.
      * @return valor do imposto devido
      */
     public float calcularImposto() {
-        float totalTributavel = getTotalRendimentosTributaveis();
-        float deducaoTotal = getDeducao();
-        float baseCalculo = totalTributavel - deducaoTotal;
+        float baseCalculo = calcularBaseCalculo();
 
         if (baseCalculo <= FAIXAS[0]) {
             return 0;
@@ -317,5 +335,20 @@ public class IRPF {
 
         return imposto;
     }
+
+	/**
+	 * Calcula a alíquota efetiva do imposto de renda.
+	 * A alíquota efetiva é a porcentagem do imposto devido em relação à base de cálculo.
+	 * @return alíquota efetiva em percentual
+	 */
+	public float calcularAliquotaEfetiva() {
+		float baseCalculo = calcularBaseCalculo();
+		if (baseCalculo <= 0) {
+			return 0; // Se a base for zero ou negativa, a alíquota é zero
+		}
+
+		float impostoDevido = calcularImposto();
+		return (impostoDevido / baseCalculo) * 100;
+	}
 	
 }
