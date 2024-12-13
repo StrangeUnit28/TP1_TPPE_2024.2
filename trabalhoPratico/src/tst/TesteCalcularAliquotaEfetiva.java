@@ -34,10 +34,10 @@ public class TesteCalcularAliquotaEfetiva {
     @Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-            { 30000, 5000, ((25000 - 22847.76f) * 0.075f) / 25000 * 100 },
-            { 40000, 10000, (((30000 - 22847.76f) * 0.075f) + ((40000 - 33919.80f) * 0.15f)) / 30000 * 100 },
-            { 20000, 25000, 0.0f }, // Caso: dedução maior que rendimento
-            { 0, 0, 0.0f }          // Caso: sem rendimentos
+                { 30000, 5000, 0.64f },
+                { 40000, 10000, 1.78f },
+                { 20000, 25000, 0.0f }, // Caso: dedução maior que rendimento
+                { 0, 0, 0.0f } // Caso: sem rendimentos
         });
     }
 
