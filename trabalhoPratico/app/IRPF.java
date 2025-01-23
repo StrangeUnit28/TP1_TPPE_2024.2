@@ -307,9 +307,7 @@ public class IRPF {
      * @return base de cálculo do imposto de renda
      */
     public float calcularBaseCalculo() {
-        float totalTributavel = getTotalRendimentosTributaveis();
-        float deducaoTotal = getDeducao();
-        return totalTributavel - deducaoTotal;
+        return new CalculadoraBaseCalculo(this).calcular();
     }
 
     /**
@@ -326,13 +324,7 @@ public class IRPF {
 	 * @return alíquota efetiva em percentual
 	 */
 	public float calcularAliquotaEfetiva() {
-		float baseCalculo = calcularBaseCalculo();
-		if (baseCalculo <= 0) {
-			return 0; // Se a base for zero ou negativa, a alíquota é zero
-		}
-
-		float impostoDevido = calcularImposto();
-		return (impostoDevido / baseCalculo) * 100;
+		return new CalculadoraAliquotaEfetiva(this).calcular();
 	}
 	
 }
