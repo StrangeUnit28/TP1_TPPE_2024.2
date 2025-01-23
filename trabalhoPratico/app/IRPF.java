@@ -113,21 +113,18 @@ public class IRPF {
 	 */
 	public void cadastrarDependente(String nome, String parentesco) {
 		// adicionar dependente 
-		String[] temp = new String[nomesDependentes.length + 1];
-		for (int i=0; i<nomesDependentes.length; i++) {
-			temp[i] = nomesDependentes[i];
-		}
-		temp[nomesDependentes.length] = nome;
-		nomesDependentes = temp;
-		
-		String[] temp2 = new String[parentescosDependentes.length + 1];
-		for (int i=0; i<parentescosDependentes.length; i++) {
-			temp2[i] = parentescosDependentes[i];
-		}
-		temp2[parentescosDependentes.length] = parentesco;
-		parentescosDependentes = temp2;
-		
+		nomesDependentes = adicionarElemento(nomesDependentes, nome);
+		parentescosDependentes = adicionarElemento(parentescosDependentes, parentesco);
 		numDependentes++;
+	}
+	
+	private String[] adicionarElemento(String[] array, String elemento) {
+		String[] temp = new String[array.length + 1];
+		for (int i = 0; i < array.length; i++) {
+			temp[i] = array[i];
+		}
+		temp[array.length] = elemento;
+		return temp;
 	}
 	
 
